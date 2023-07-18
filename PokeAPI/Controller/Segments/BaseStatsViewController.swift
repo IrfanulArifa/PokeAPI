@@ -68,8 +68,10 @@ class BaseStatsViewController: UIViewController {
   }
   
   func progressColor(view:UIProgressView, value: Int){
-    if value > 50 {
+    if value > 100 {
       return view.progressTintColor = .green
+    } else if value > 50{
+      return view.progressTintColor = .blue
     } else {
       return view.progressTintColor = .red
     }

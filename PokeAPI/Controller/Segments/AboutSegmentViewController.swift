@@ -35,8 +35,8 @@ class AboutSegmentViewController: UIViewController {
       }
       let ability = dataArray.joined(separator: ", ")
       abilityValue.text = ability
-      heightValue.text = String(unwrappedAbout.height)
-      weightValue.text = String(unwrappedAbout.weight)
+      heightValue.text = String(unwrappedAbout.height)+"ft"
+      weightValue.text = String(unwrappedAbout.weight)+"lbs"
       speciesValue.text = unwrappedAbout.species.name.capitalized
       let jumlahType = unwrappedAbout.types.count
       var typeArray : [String] = []
@@ -56,6 +56,4 @@ class AboutSegmentViewController: UIViewController {
       print("Error Data")
     }
   }
-  
-  
 }

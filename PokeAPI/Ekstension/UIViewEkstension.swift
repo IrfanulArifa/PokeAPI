@@ -14,3 +14,18 @@ extension UIView{
     set { self.layer.cornerRadius = newValue}
   }
 }
+
+extension UIImage{
+  var base64: String?{
+    self.pngData()?.base64EncodedString()
+  }
+}
+
+extension String{
+  var imageFromBase64: UIImage?{
+    guard let imageData = Data(base64Encoded: self, options: .ignoreUnknownCharacters) else {
+      return nil
+    }
+    return UIImage(data: imageData)
+  }
+}

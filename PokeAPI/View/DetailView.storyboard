@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Z8f-0g-m2h">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eeW-3s-gcx">
-                                <rect key="frame" x="0.0" y="280" width="393" height="572"/>
+                                <rect key="frame" x="0.0" y="324" width="393" height="528"/>
                                 <subviews>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="C25-ku-tZa">
                                         <rect key="frame" x="30" y="30" width="333" height="32"/>
@@ -87,14 +87,14 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Az1-nC-EBA">
-                                <rect key="frame" x="116.66666666666669" y="146" width="160" height="160"/>
+                                <rect key="frame" x="116.66666666666669" y="190" width="160" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="160" id="IgE-Df-6Vu"/>
                                     <constraint firstAttribute="width" constant="160" id="fQe-Bc-WA3"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nMm-Ze-Apj">
-                                <rect key="frame" x="30" y="69" width="200" height="41"/>
+                                <rect key="frame" x="30" y="113" width="200" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="z35-Sh-JSz"/>
                                 </constraints>
@@ -103,7 +103,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRt-sK-Nwl">
-                                <rect key="frame" x="273" y="69" width="90" height="41"/>
+                                <rect key="frame" x="273" y="113" width="90" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="Pga-nH-lJ5"/>
                                 </constraints>
@@ -112,7 +112,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="IFp-wW-log">
-                                <rect key="frame" x="100" y="110" width="193" height="32"/>
+                                <rect key="frame" x="100" y="154" width="193" height="32"/>
                                 <segments>
                                     <segment title="Normal"/>
                                     <segment title="Shiny"/>
@@ -141,9 +141,20 @@
                             <constraint firstItem="Az1-nC-EBA" firstAttribute="top" secondItem="IFp-wW-log" secondAttribute="bottom" constant="5" id="wjt-Qt-zYx"/>
                         </constraints>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="MBf-f0-aVA">
+                        <barButtonItem key="rightBarButtonItem" image="heart" catalog="system" id="HSh-2i-To8">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="loveButtonClicked:" destination="Y6W-OH-hqX" id="CVB-2S-Rye"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="aboutSegmentView" destination="jcf-Gv-HbO" id="gmC-P7-cPp"/>
                         <outlet property="baseStatsSegmentView" destination="F8p-ff-2Io" id="H2u-jT-kYw"/>
+                        <outlet property="loveButton" destination="HSh-2i-To8" id="RqS-7f-G5q"/>
                         <outlet property="movesSegmentView" destination="QZr-V1-1tG" id="YhI-IY-6Gs"/>
                         <outlet property="pictSegmentedControl" destination="IFp-wW-log" id="wid-O7-Z05"/>
                         <outlet property="pokemonID" destination="LRt-sK-Nwl" id="gKS-aT-tJh"/>
@@ -154,7 +165,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="32.824427480916029" y="-2.1126760563380285"/>
+            <point key="canvasLocation" x="959.5419847328244" y="-2.1126760563380285"/>
         </scene>
         <!--About Segment View Controller-->
         <scene sceneID="aYN-q1-6Jq">
@@ -521,10 +532,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1wv-pl-Qtc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="865" y="-2"/>
+            <point key="canvasLocation" x="1791.6030534351144" y="-2.1126760563380285"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kPV-Gp-LWl">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Z8f-0g-m2h" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mbO-aX-GfQ">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="Ch7-56-t45"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="P1i-Lz-a5m" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="32.824427480916029" y="-2.1126760563380285"/>
         </scene>
     </scenes>
     <resources>
+        <image name="heart" catalog="system" width="128" height="107"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

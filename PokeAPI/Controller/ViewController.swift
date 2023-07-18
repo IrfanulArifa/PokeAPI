@@ -23,8 +23,6 @@ class ViewController: UIViewController, UICollectionViewDataSource{
     let pokemon = pokemonData[indexPath.item]
     cell.pokemonName.text = pokemon.name.capitalized
     let imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(indexPath.item+1).png"
-    
-    let color = "https://pokeapi.co/api/v2/pokemon-species/\(pokemon.name)/"
     cell.pokemonPict.sd_setImage(with: URL(string: imageUrl))
     cell.pokemonID.text = "#" + String(indexPath.item+1)
     return cell

@@ -48,17 +48,6 @@ class NetworkServices {
     }
     let decoder = JSONDecoder()
     let result = try decoder.decode(Detail.self, from: data)
-    print(result.moves)
     return result.moves
   }
-  
-//  func getSpecies(_ detailLink: String) async throws -> PokeName {
-//    let component = URLComponents(string: "https://pokeapi.co/api/v2/pokemon-species/\(detailLink)/")!
-//    let request = URLRequest(url:component.url!)
-//    let (data, responses) = try await URLSession.shared.data(for: request)
-//    guard (responses as? HTTPURLResponse)?.statusCode == 200 else { fatalError("Error Can't Fetching Data")}
-//    let decoder = JSONDecoder()
-//    let result = try decoder.decode(PokeName.self, from: data)
-//    return result
-//  }
 }

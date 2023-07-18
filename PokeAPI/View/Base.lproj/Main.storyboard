@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Pokemon List-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="PokeAPI" customModuleProvider="target" sceneMemberID="viewController">
@@ -23,7 +23,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="UKe-2Q-dQs">
-                                <rect key="frame" x="10" y="164" width="373" height="654"/>
+                                <rect key="frame" x="10" y="164" width="373" height="605"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="O5Y-SA-ru2">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -45,6 +45,7 @@
                             <constraint firstItem="UKe-2Q-dQs" firstAttribute="leading" secondItem="Ueh-RP-URq" secondAttribute="leading" constant="10" id="vsT-6r-qDz"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Pokemon List" image="pawprint" catalog="system" id="FAn-0b-kk2"/>
                     <navigationItem key="navigationItem" id="fB7-CK-Fkx"/>
                     <connections>
                         <outlet property="pokemonCollectionView" destination="UKe-2Q-dQs" id="Vv6-sc-zLN"/>
@@ -52,7 +53,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1052.6717557251909" y="3.5211267605633805"/>
+            <point key="canvasLocation" x="1979.3893129770991" y="3.5211267605633805"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2A7-B5-jwz">
@@ -67,15 +68,75 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ycG-zZ-Kfh"/>
+                        <segue destination="dbL-N7-gO1" kind="relationship" relationship="rootViewController" id="ycG-zZ-Kfh"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CPG-yi-bhy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="125.95419847328243" y="3.5211267605633805"/>
         </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="p6G-hO-tkT">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dbL-N7-gO1" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="yzE-te-wcw"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bSr-Dx-y6m">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="c2V-Aa-i1i"/>
+                        <segue destination="GeG-uz-4FP" kind="relationship" relationship="viewControllers" id="4wh-sp-UTj"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q2C-br-sCo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1052.6717557251909" y="3.5211267605633805"/>
+        </scene>
+        <!--Favorited-->
+        <scene sceneID="oKP-Oj-HiM">
+            <objects>
+                <viewController id="GeG-uz-4FP" customClass="FavoriteViewController" customModule="PokeAPI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cvN-Nh-3B1">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite Pokemon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Xg-RY-Tu1">
+                                <rect key="frame" x="25" y="113" width="248" height="41"/>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="30"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="pAw-41-LKJ">
+                                <rect key="frame" x="0.0" y="154" width="393" height="615"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZO8-p2-2pp"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pAw-41-LKJ" firstAttribute="top" secondItem="7Xg-RY-Tu1" secondAttribute="bottom" id="DNJ-GF-Z94"/>
+                            <constraint firstItem="ZO8-p2-2pp" firstAttribute="trailing" secondItem="pAw-41-LKJ" secondAttribute="trailing" id="Hqz-lY-i0L"/>
+                            <constraint firstItem="ZO8-p2-2pp" firstAttribute="bottom" secondItem="pAw-41-LKJ" secondAttribute="bottom" id="WxE-Af-yFz"/>
+                            <constraint firstItem="7Xg-RY-Tu1" firstAttribute="top" secondItem="ZO8-p2-2pp" secondAttribute="top" constant="10" id="bPj-gS-CJi"/>
+                            <constraint firstItem="7Xg-RY-Tu1" firstAttribute="leading" secondItem="ZO8-p2-2pp" secondAttribute="leading" constant="25" id="hbk-Ku-KXH"/>
+                            <constraint firstItem="pAw-41-LKJ" firstAttribute="leading" secondItem="ZO8-p2-2pp" secondAttribute="leading" id="kjg-r7-TfT"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Favorited" image="heart.fill" catalog="system" id="BXC-dq-1S7"/>
+                    <connections>
+                        <outlet property="favoriteTableView" destination="pAw-41-LKJ" id="60S-rO-yuf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZTo-5I-Ggb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1053" y="692"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="heart.fill" catalog="system" width="128" height="107"/>
+        <image name="pawprint" catalog="system" width="128" height="114"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
