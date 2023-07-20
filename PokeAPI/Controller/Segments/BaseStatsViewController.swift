@@ -11,6 +11,7 @@ var linkBase = ""
 
 class BaseStatsViewController: UIViewController {
   var baseDetail: Detail?
+  let logic = LogicFunction()
   @IBOutlet weak var hpStat: UILabel!
   @IBOutlet weak var atkStat: UILabel!
   @IBOutlet weak var defStat: UILabel!
@@ -49,12 +50,12 @@ class BaseStatsViewController: UIViewController {
       let specialDefValue = unwrappedBase.stats[4].base_stat
       let speedValue = unwrappedBase.stats[5].base_stat
       
-      progressColor(view: hpProgressView, value: hpValue)
-      progressColor(view: atkProgressView, value: atkValue)
-      progressColor(view: defProgressView, value: defValue)
-      progressColor(view: specialAtkProgressView, value: specialAtkValue)
-      progressColor(view: specialDefProgressView, value: specialDefValue)
-      progressColor(view: speedProgressView, value: speedValue)
+      logic.ProgressColor(view: hpProgressView, value: hpValue)
+      logic.ProgressColor(view: atkProgressView, value: atkValue)
+      logic.ProgressColor(view: defProgressView, value: defValue)
+      logic.ProgressColor(view: specialAtkProgressView, value: specialAtkValue)
+      logic.ProgressColor(view: specialDefProgressView, value: specialDefValue)
+      logic.ProgressColor(view: speedProgressView, value: speedValue)
       
       
       hpProgressView.progress = Float(unwrappedBase.stats[0].base_stat)/100
@@ -67,15 +68,6 @@ class BaseStatsViewController: UIViewController {
     }
   }
   
-  func progressColor(view:UIProgressView, value: Int){
-    if value > 100 {
-      return view.progressTintColor = .green
-    } else if value > 50{
-      return view.progressTintColor = .blue
-    } else {
-      return view.progressTintColor = .red
-    }
-  }
   func getDetail() async {
     let network = NetworkServices()
     do {

@@ -7,8 +7,6 @@
 
 import UIKit
 
-// Comment
-
 class ViewController: UIViewController, UICollectionViewDataSource{
   private var pokemonData: [Result] = []
   
@@ -37,13 +35,10 @@ class ViewController: UIViewController, UICollectionViewDataSource{
       navigationController?.pushViewController(newMove, animated: true)
       navigationItem.title = ""
       
-      let storyboardParsing = UIStoryboard(name: "DetailView", bundle: nil)
-      guard let about = storyboardParsing.instantiateViewController(withIdentifier: "AboutSegmentViewController") as? AboutSegmentViewController else { return }
-      guard let baseStats = storyboardParsing.instantiateViewController(withIdentifier: "BaseStatsViewController") as? BaseStatsViewController else { return }
-      guard let moves = storyboardParsing.instantiateViewController(withIdentifier: "MovesSegmentViewController") as? MovesSegmentViewController else { return }
-      about.sendConfigurationToAbout(selectedObject.url)
-      baseStats.sendConfigurationToBaseStats(selectedObject.url)
-      moves.sendConfigurationToMoves(selectedObject.url)
+      let dataParser = DataParser()
+      dataParser.SendToAbout(selectedObject.url)
+      dataParser.SendToBase(selectedObject.url)
+      dataParser.SendToMove(selectedObject.url)
     }
   }
   
@@ -55,6 +50,7 @@ class ViewController: UIViewController, UICollectionViewDataSource{
     pokemonCollectionView.delegate = self
     pokemonCollectionView.register(UINib(nibName: "PokemonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PokemonCollectionViewCell")
   }
+  
   override func viewWillAppear(_ animated: Bool) {
     Task{ await getPokemon() }
   }

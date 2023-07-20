@@ -14,6 +14,7 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
   private var dataPokemon: FavPokemon?
   var data : [FavPokemon] = []
   let appDelegate = UIApplication.shared.delegate as? AppDelegate
+  let crud = CrudSystem()
   
   @IBOutlet weak var favoriteTableView: UITableView!
   
@@ -46,7 +47,7 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
         
         if let textField = alertController.textFields?.first {
           let newData = textField.text ?? "No Name"
-          self?.updateData(name: pokemonData.name, with: newData)
+          self?.crud.UpdateData(name: pokemonData.name, with: newData)
           self?.retrieve()
           self?.favoriteTableView.reloadData()
         }
@@ -64,26 +65,10 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
     return configuration
   }
   
-//  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//    let selectedObject = data[indexPath.row]
-//    if tableView.cellForRow(at: indexPath) is FavoriteTableViewCell {
-//      let storyboard = UIStoryboard(name: "DetailView", bundle: nil)
-//      guard let newMove = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return }
-//      
-//      newMove.sendDataToDetail(selectedObject.name)
-//      navigationController?.pushViewController(newMove, animated: true)
-//      navigationItem.title = ""
-//    }
-//  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    
-    
     favoriteTableView.dataSource = self
     favoriteTableView.delegate = self
-    
     favoriteTableView.register(UINib(nibName: "FavoriteTableViewCell", bundle: nil), forCellReuseIdentifier: "FavoriteTableViewCell")
     retrieve()
     favoriteTableView.reloadData()
@@ -120,12 +105,9 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
   
   func deleteData(_ name: String, indexPath: IndexPath) {
     guard let appDelegeate = UIApplication.shared.delegate as? AppDelegate else { return }
-    
     let managedContext = appDelegeate.persistentContainer.viewContext
-    
     let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest.init(entityName: "Pokemon")
     fetchRequest.predicate = NSPredicate(format: "name = %@", name)
-    
     do {
       let result = try managedContext.fetch(fetchRequest)
       
@@ -139,33 +121,6 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
       }
     } catch let err {
       print("Unable to update data: ",err)
-    }
-    isChange = true
-  }
-  
-  func updateData( name: String, with newName: String) {
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-    
-    let managedContext = appDelegate.persistentContainer.viewContext
-    
-    let fetchRequest: NSFetchRequest<NSManagedObject> = NSFetchRequest(entityName: "Pokemon")
-    fetchRequest.predicate = NSPredicate(format: "name = %@", name)
-    
-    do {
-      let fetchedResults = try managedContext.fetch(fetchRequest)
-      
-      if let pokemon = fetchedResults.first {
-        pokemon.setValue(newName, forKey: "name")
-        
-        do {
-          try managedContext.save()
-          print("Data updated successfully")
-        } catch{
-          print("Failed to update data: (error), (error.userInfo)", error)
-        }
-      }
-    } catch {
-      print("Fetch error: (error), (error.userInfo)", error)
     }
     isChange = true
   }
