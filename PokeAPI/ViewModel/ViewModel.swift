@@ -22,7 +22,7 @@ class ViewModel {
   var baseOption: (() -> Void)?
   var favoritAction: (() -> Void)?
   
-  
+  // GET POKEMON
   func getPokemonData() async throws -> [Result]{
     let component = URLComponents(string: "https://pokeapi.co/api/v2/pokemon")!
     let request = URLRequest(url:component.url!)
