@@ -7,38 +7,22 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource{
-  private var pokemonData: [Result] = []
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return pokemonData.count
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCollectionViewCell", for: indexPath) as? PokemonCollectionViewCell else {
-      return UICollectionViewCell()
-    }
-    let pokemon = pokemonData[indexPath.item]
-    cell.pokemonName.text = pokemon.name.capitalized
-    let imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(indexPath.item+1).png"
-    cell.pokemonPict.sd_setImage(with: URL(string: imageUrl))
-    cell.pokemonID.text = "#" + String(indexPath.item+1)
-    return cell
-  }
+// Comment
+
+class ViewController: UIViewController{
+  let viewModel = ViewModel()
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let selectedObject = pokemonData[indexPath.row]
+    let selectedObject = viewModel.pokemonData[indexPath.row]
     if collectionView.cellForItem(at: indexPath) is PokemonCollectionViewCell{
       let storyboard = UIStoryboard(name: "DetailView", bundle: nil)
       guard let newMove = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return }
       newMove.pokemon = selectedObject
       navigationController?.pushViewController(newMove, animated: true)
       navigationItem.title = ""
-      
-      let dataParser = DataParser()
-      dataParser.SendToAbout(selectedObject.url)
-      dataParser.SendToBase(selectedObject.url)
-      dataParser.SendToMove(selectedObject.url)
+      viewModel.moveToAbout(selectedObject.url)
+      viewModel.moveToBase(selectedObject.url)
+      viewModel.moveToMoves(selectedObject.url)
     }
   }
   
@@ -49,24 +33,25 @@ class ViewController: UIViewController, UICollectionViewDataSource{
     pokemonCollectionView.dataSource = self
     pokemonCollectionView.delegate = self
     pokemonCollectionView.register(UINib(nibName: "PokemonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PokemonCollectionViewCell")
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    Task{ await getPokemon() }
-  }
-  
-  func getPokemon() async {
-    let network = NetworkServices()
-    do {
-      pokemonData = try await network.getPokemon()
-      pokemonCollectionView.reloadData()
-    } catch {
-      print("Error")
+    viewModel.loadPokemon()
+    
+    viewModel.reloadAction = { [weak self] in
+      DispatchQueue.main.async {
+        self?.pokemonCollectionView.reloadData()
+      }
     }
   }
+  override func viewWillAppear(_ animated: Bool) {
+    viewModel.reloadAction = { [weak self] in
+      DispatchQueue.main.async {
+        self?.pokemonCollectionView.reloadData()
+      }
+    }
+  }
+  
 }
 
-extension UIViewController: UICollectionViewDelegateFlowLayout{
+extension ViewController: UICollectionViewDelegateFlowLayout{
   
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     return CGSize(width: 150, height: 150)
@@ -79,4 +64,30 @@ extension UIViewController: UICollectionViewDelegateFlowLayout{
   public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 30
   }
+  
+  public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    if indexPath.item == viewModel.pokemonData.count-1 {
+      viewModel.loadPokemon()
+    }
+  }
+}
+
+extension ViewController: UICollectionViewDataSource {
+  
+  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return viewModel.pokemonData.count
+  }
+  
+  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokemonCollectionViewCell", for: indexPath) as? PokemonCollectionViewCell else {
+      return UICollectionViewCell()
+    }
+    let pokemon = viewModel.pokemonData[indexPath.item]
+    cell.pokemonName.text = pokemon.name.capitalized
+    let imageUrl = viewModel.imageToView(indexPath.item+1)
+    cell.pokemonPict.sd_setImage(with: URL(string: imageUrl))
+    cell.pokemonID.text = "#" + String(indexPath.item+1)
+    return cell
+  }
+  
 }

@@ -10,7 +10,8 @@ import UIKit
 var linkPoke = ""
 
 class AboutSegmentViewController: UIViewController {
-  var aboutDetail: Detail?
+  
+  let viewModel = ViewModel()
   @IBOutlet weak var speciesValue: UILabel!
   @IBOutlet weak var abilityValue: UILabel!
   @IBOutlet weak var heightValue: UILabel!
@@ -26,34 +27,28 @@ class AboutSegmentViewController: UIViewController {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    Task{ await getDetail()
-      guard let unwrappedAbout = aboutDetail else { return }
-      let jumlah = unwrappedAbout.abilities.count
-      var dataArray : [String] = []
-      for i in 0..<jumlah{
-        dataArray.append(unwrappedAbout.abilities[i].ability.name.capitalized)
+    viewModel.loadBase(linkPoke)
+    viewModel.baseOption = {
+      DispatchQueue.main.async {
+        guard let unwrappedAbout = self.viewModel.baseDetail else { return }
+        let jumlah = unwrappedAbout.abilities.count
+        var dataArray : [String] = []
+        for i in 0..<jumlah{
+          dataArray.append(unwrappedAbout.abilities[i].ability.name.capitalized)
+        }
+        let ability = dataArray.joined(separator: ", ")
+        self.abilityValue.text = ability
+        self.heightValue.text = String(unwrappedAbout.height)+"ft"
+        self.weightValue.text = String(unwrappedAbout.weight)+"lbs"
+        self.speciesValue.text = unwrappedAbout.species.name.capitalized
+        let jumlahType = unwrappedAbout.types.count
+        var typeArray : [String] = []
+        for i in 0..<jumlahType{
+          typeArray.append(unwrappedAbout.types[i].type.name.capitalized)
+        }
+        let type = typeArray.joined(separator: ", ")
+        self.typesValue.text = type
       }
-      let ability = dataArray.joined(separator: ", ")
-      abilityValue.text = ability
-      heightValue.text = String(unwrappedAbout.height)+"ft"
-      weightValue.text = String(unwrappedAbout.weight)+"lbs"
-      speciesValue.text = unwrappedAbout.species.name.capitalized
-      let jumlahType = unwrappedAbout.types.count
-      var typeArray : [String] = []
-      for i in 0..<jumlahType{
-        typeArray.append(unwrappedAbout.types[i].type.name.capitalized)
-      }
-      let type = typeArray.joined(separator: ", ")
-      typesValue.text = type
-    }
-  }
-  
-  func getDetail() async {
-    let network = NetworkServices()
-    do {
-      aboutDetail = try await network.getDetail(linkPoke)
-    } catch {
-      print("Error Data")
     }
   }
 }

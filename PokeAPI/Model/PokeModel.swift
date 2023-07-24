@@ -83,7 +83,3 @@ struct OfficialArtwork: Codable{
 struct TypeElement: Codable{
   let type: Species
 }
-
-//struct PokeName: Codable{
-//  let name:String
-//}

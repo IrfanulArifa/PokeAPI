@@ -10,32 +10,45 @@ import CoreData
 
 var isChange: Bool = false
 
-class FavoriteViewController: UIViewController, UITableViewDataSource {
-  private var dataPokemon: FavPokemon?
-  var data : [FavPokemon] = []
+class FavoriteViewController: UIViewController, UITableViewDelegate {
   let appDelegate = UIApplication.shared.delegate as? AppDelegate
-  let crud = CrudSystem()
+  var viewModel = ViewModel()
   
   @IBOutlet weak var favoriteTableView: UITableView!
   
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return data.count
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    favoriteTableView.dataSource = self
+    favoriteTableView.delegate = self
+    favoriteTableView.register(UINib(nibName: "FavoriteTableViewCell", bundle: nil), forCellReuseIdentifier: "FavoriteTableViewCell")
+    viewModel.retrieve()
+    favoriteTableView.reloadData()
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "FavoriteTableViewCell", for: indexPath) as? FavoriteTableViewCell else { return UITableViewCell() }
-    let pokemonData = data[indexPath.row]
-    cell.pokemonImage.image = pokemonData.image.imageFromBase64
-    cell.pokemonName.text = pokemonData.name
-    cell.pokemonId.text = "#"+String(pokemonData.id)
-    return cell
+  override func viewWillAppear(_ animated: Bool) {
+    if isChange == true{
+      viewModel.retrieve()
+      favoriteTableView.reloadData()
+      isChange = false
+    }
+  }
+}
+
+extension FavoriteViewController: UITableViewDataSource {
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return viewModel.data.count
   }
   
   func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    let pokemonData = data[indexPath.row]
+    let pokemonData = viewModel.data[indexPath.row]
     let deleteData = UIContextualAction(style: .destructive,
-                                   title: "Delete") { [weak self] (action, view, completionHandler) in
-      self?.deleteData(pokemonData.name, indexPath: indexPath)
+                                        title: "Delete") { [weak self] (action, view, completionHandler) in
+      self?.viewModel.deleteData(pokemonData.name, indexPath: indexPath)
+      self?.viewModel.favoritAction = { [weak self] in
+        self?.viewModel.retrieve()
+        self?.favoriteTableView.deleteRows(at: [indexPath], with: .left)
+      }
       completionHandler(true)
     }
     deleteData.backgroundColor = .systemRed
@@ -47,8 +60,8 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
         
         if let textField = alertController.textFields?.first {
           let newData = textField.text ?? "No Name"
-          self?.crud.UpdateData(name: pokemonData.name, with: newData)
-          self?.retrieve()
+          self?.viewModel.updateData(name: pokemonData.name, with: newData)
+          self?.viewModel.retrieve()
           self?.favoriteTableView.reloadData()
         }
       }
@@ -61,67 +74,16 @@ class FavoriteViewController: UIViewController, UITableViewDataSource {
     
     let configuration = UISwipeActionsConfiguration(actions: [deleteData, updateData])
     isChange = true
-
+    
     return configuration
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    favoriteTableView.dataSource = self
-    favoriteTableView.delegate = self
-    favoriteTableView.register(UINib(nibName: "FavoriteTableViewCell", bundle: nil), forCellReuseIdentifier: "FavoriteTableViewCell")
-    retrieve()
-    favoriteTableView.reloadData()
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    if isChange == true{
-      retrieve()
-      favoriteTableView.reloadData()
-      isChange = false
-    }
-  }
-  
-  private func retrieve(){
-    var pokemons = [FavPokemon]()
-    let manageContext = appDelegate?.persistentContainer.viewContext
-    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Pokemon")
-    do {
-      let result = try manageContext?.fetch(fetchRequest) as! [NSManagedObject]
-      result.forEach { poke in
-        guard let pokeData = poke as? Pokemon else { return }
-        let favPokemon = FavPokemon(
-          id: Int(pokeData.id),
-          image: pokeData.image ?? "",
-          name: pokeData.name ?? "")
-        
-        pokemons.append(favPokemon)
-      }
-      data = pokemons
-    } catch let error {
-      print("Tidak Bisa Menampilkan Data, ", error)
-    }
-  }
-  
-  func deleteData(_ name: String, indexPath: IndexPath) {
-    guard let appDelegeate = UIApplication.shared.delegate as? AppDelegate else { return }
-    let managedContext = appDelegeate.persistentContainer.viewContext
-    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest.init(entityName: "Pokemon")
-    fetchRequest.predicate = NSPredicate(format: "name = %@", name)
-    do {
-      let result = try managedContext.fetch(fetchRequest)
-      
-      for index in 0..<result.count {
-        let dataToDelete = result[index] as! NSManagedObject
-        managedContext.delete(dataToDelete)
-        print("Delete Data: ",dataToDelete)
-        try managedContext.save()
-        retrieve()
-        favoriteTableView.deleteRows(at: [indexPath], with: .left)
-      }
-    } catch let err {
-      print("Unable to update data: ",err)
-    }
-    isChange = true
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "FavoriteTableViewCell", for: indexPath) as? FavoriteTableViewCell else { return UITableViewCell() }
+    let pokemonData = viewModel.data[indexPath.row]
+    cell.pokemonImage.image = pokemonData.image.imageFromBase64
+    cell.pokemonName.text = pokemonData.name
+    cell.pokemonId.text = "#"+String(pokemonData.id)
+    return cell
   }
 }

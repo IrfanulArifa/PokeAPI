@@ -9,23 +9,8 @@ import UIKit
 
 var linkMoves = ""
 
-class MovesSegmentViewController: UIViewController, UITableViewDataSource {
-  
-  private var aboutMoves: [Move] = []
-  
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return aboutMoves.count
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    if let cell = tableView.dequeueReusableCell(withIdentifier: "MovesCell", for: indexPath) as? MovesTableViewCell{
-      let moves = aboutMoves[indexPath.row]
-      cell.moveValue.text = moves.move.name.capitalized
-      return cell
-    } else {
-      return UITableViewCell()
-    }
-  }
+class MovesSegmentViewController: UIViewController {
+  let viewModel = ViewModel()
   
   @IBOutlet weak var movesTableView: UITableView!
   
@@ -41,21 +26,27 @@ class MovesSegmentViewController: UIViewController, UITableViewDataSource {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    Task{ await getMove()
-    }
+    viewModel.loadDetail(linkMoves)
   }
   
-  func getMove() async {
-    let network = NetworkServices()
-    do {
-      aboutMoves = try await network.getMove(linkMoves)
-      movesTableView.reloadData()
-    } catch {
-      print("Error Data")
+}
+
+extension MovesSegmentViewController: UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return viewModel.aboutMoves.count
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    if let cell = tableView.dequeueReusableCell(withIdentifier: "MovesCell", for: indexPath) as? MovesTableViewCell{
+      let moves = viewModel.aboutMoves[indexPath.row]
+      cell.moveValue.text = moves.move.name.capitalized
+      return cell
+    } else {
+      return UITableViewCell()
     }
   }
 }
 
-extension UIViewController: UITableViewDelegate{
+extension MovesSegmentViewController: UITableViewDelegate {
   
 }
