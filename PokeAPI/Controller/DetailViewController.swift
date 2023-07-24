@@ -38,8 +38,8 @@ class DetailViewController: UIViewController {
     aboutSegmentView.isHidden = false
     baseStatsSegmentView.isHidden = true
     movesSegmentView.isHidden = true
-    
     self.loveButton.isEnabled = false
+    
     checkData(pokemonName.text!) { [weak self] isExists in
       self?.isExists = isExists
       let iconName = isExists ? "heart.fill" : "heart"
@@ -56,10 +56,11 @@ class DetailViewController: UIViewController {
       pokemonPict.sd_setImage(with: URL(string: unwrappedAbilityPokemon.sprites.other.officialArtwork.front_default))
     }
     
+    
   }
   
   func getDetail() async {
-    let network = NetworkServices()
+    let network = ViewModel()
     do {
       abilityPokemon = try await network.getDetail(pokemon!.url)
     } catch {
@@ -107,11 +108,12 @@ class DetailViewController: UIViewController {
     if isExists {
       deleteData(savingName)
       self.loveButton.image = UIImage(systemName: "heart")
+      self.isExists = false
     } else {
       create(savingData.id, image.base64 ?? "", savingName)
       self.loveButton.image = UIImage(systemName: "heart.fill")
+      self.isExists = true
     }
-    
     isChange = true
   }
   
@@ -125,8 +127,9 @@ class DetailViewController: UIViewController {
       let result = try manageContext.fetch(fetchRequest)
       let isExists = result.count > 0
       completion(isExists)
+      print(isExists)
     } catch {
-      
+      print(isExists)
     }
   }
   
@@ -191,4 +194,5 @@ class DetailViewController: UIViewController {
       print("Tidak Bisa Menampilkan Data, ", error)
     }
   }
+  
 }
