@@ -17,14 +17,28 @@ class ViewModel {
   var aboutMoves: [Move] = []
   var baseDetail: Detail?
   var data : [FavPokemon] = []
+  var pokeLink : Welcome?
   
   var reloadAction: (() -> Void)?
   var baseOption: (() -> Void)?
   var favoritAction: (() -> Void)?
+  var firstLink = "https://pokeapi.co/api/v2/pokemon"
   
   // GET POKEMON
-  func getPokemonData() async throws -> [Result]{
+  func getPokemonLink() async throws -> Welcome {
     let component = URLComponents(string: "https://pokeapi.co/api/v2/pokemon")!
+    let request = URLRequest(url:component.url!)
+    let (data, responses) = try await URLSession.shared.data(for: request)
+    guard (responses as? HTTPURLResponse)?.statusCode == 200 else {
+      fatalError("Error Can't Fetching Data")
+    }
+    let decoder = JSONDecoder()
+    let result = try decoder.decode(Welcome.self, from: data)
+    return result
+  }
+  
+  func getPokemonData(_ link: String) async throws -> [Result]{
+    let component = URLComponents(string: link)!
     let request = URLRequest(url:component.url!)
     let (data, responses) = try await URLSession.shared.data(for: request)
     guard (responses as? HTTPURLResponse)?.statusCode == 200 else {
@@ -98,8 +112,8 @@ class ViewModel {
     return moves.sendConfigurationToMoves(selected)
   }
   
-  func loadPokemon() {
-    Task{ await getPokemon() }
+  func loadPokemon(_ url: String) {
+    Task{ await getPokemon(url) }
   }
   
   func loadDetail(_ url: String) {
@@ -112,6 +126,18 @@ class ViewModel {
     }
   }
   
+  func loadLink() {
+    Task { await getPokeLink() }
+  }
+  
+  func getPokeLink() async {
+    do {
+      pokeLink = try await getPokemonLink()
+    } catch {
+      print("Error Data")
+    }
+  }
+  
   func getMove(_ url: String) async {
     do {
       aboutMoves = try await getMoveData(url)
@@ -121,10 +147,10 @@ class ViewModel {
     }
   }
   
-  func getPokemon() async {
+  func getPokemon(_ url: String) async {
     var data : [Result] = []
     do {
-      data = try await getPokemonData()
+      data = try await getPokemonData(url)
       pokemonData.append(contentsOf: data)
       reloadAction?()
     } catch {

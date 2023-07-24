@@ -33,7 +33,9 @@ class ViewController: UIViewController{
     pokemonCollectionView.dataSource = self
     pokemonCollectionView.delegate = self
     pokemonCollectionView.register(UINib(nibName: "PokemonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "PokemonCollectionViewCell")
-    viewModel.loadPokemon()
+    
+//    print(viewModel.pokeLink!.next)
+    viewModel.loadPokemon(viewModel.firstLink)
     
     viewModel.reloadAction = { [weak self] in
       DispatchQueue.main.async {
@@ -67,7 +69,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
   
   public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     if indexPath.item == viewModel.pokemonData.count-1 {
-      viewModel.loadPokemon()
+      viewModel.loadLink()
+      viewModel.loadPokemon(viewModel.pokeLink!.next)
     }
   }
 }
